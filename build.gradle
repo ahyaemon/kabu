@@ -7,7 +7,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.ahyaemon"
+group = "com.ahyaemon.kabu"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.ahyaemon.*")
+        annotations("com.ahyaemon.kabu.*")
     }
 }
 
@@ -35,11 +35,15 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'io.mockk:mockk:1.10.3'
+    implementation 'io.kotest:kotest-assertions-core:4.3.1'
 }
 
 
 application {
-    mainClass.set("com.ahyaemon.KabuCommand")
+    mainClass.set("com.ahyaemon.kabu.KabuCommand")
 }
 
 java {
