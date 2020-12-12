@@ -1,5 +1,6 @@
 package com.ahyaemon.kabu.get.http.client
 
+import arrow.core.Either
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import java.time.OffsetDateTime
@@ -9,13 +10,17 @@ import javax.inject.Singleton
 class MujinzouFetcher(
         private val mujinzouClient: HttpClient
 ) {
-    fun get(dateTime: OffsetDateTime): ByteArray {
-        return mujinzouClient
-                .toBlocking()
-                .retrieve(
-                        HttpRequest.GET<Any>(createUrl(dateTime)),
-                        ByteArray::class.java
-                )
+    fun get(dateTime: OffsetDateTime): Either<Throwable, ByteArray> {
+        return try {
+            Either.right(mujinzouClient
+                    .toBlocking()
+                    .retrieve(
+                            HttpRequest.GET<Any>(createUrl(dateTime)),
+                            ByteArray::class.java
+                    ))
+        } catch (e: Exception) {
+            Either.left(e)
+        }
     }
 
     fun createUrl(dateTime: OffsetDateTime): String = "/k_data/${dateTime.year}/${dateTime.yy()}_${dateTime.mm()}/T${dateTime.yy()}${dateTime.mm()}${dateTime.dd()}.zip"

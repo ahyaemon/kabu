@@ -10,7 +10,14 @@ class KabuGetService(
 ) {
 
     fun get(dateTime: OffsetDateTime) {
-        val response = mujinzouFetcher.get(dateTime)
-        println(response)
+        // zip 取得
+        val zipByteArray = mujinzouFetcher.get(dateTime)
+
+        // zip 保存
+
+        // zip 解凍
+
+        // 解凍したやつ保存
+
     }
 }

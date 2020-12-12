@@ -12,6 +12,9 @@ group = "com.ahyaemon.kabu"
 repositories {
     mavenCentral()
     jcenter()
+
+    // for arrowkt
+    maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
 }
 
 micronaut {
@@ -37,8 +40,13 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation 'org.apache.commons:commons-math3:3.6.1'
+
     implementation 'io.mockk:mockk:1.10.3'
     implementation 'io.kotest:kotest-assertions-core:4.3.1'
+
+    implementation "io.arrow-kt:arrow-core:${arrowVersion}"
+    implementation "io.arrow-kt:arrow-syntax:${arrowVersion}"
+    kapt "io.arrow-kt:arrow-meta:${arrowVersion}"
 }
 
 
