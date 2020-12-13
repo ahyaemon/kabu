@@ -34,8 +34,8 @@ class KabuGetCommand(
         val sp = date.split("-").map { it.toInt() }
         val offsetDateTime = OffsetDateTime.of(sp[0], sp[1], sp[2], 0, 0, 0, 0, ZoneOffset.of("+9"))
         kabuGetService.get(offsetDateTime, path)
-                .map { logger.info("kabu get succeeded. csv: {}", it.csvFilePath) }
-                .mapLeft { logger.error("kabu get failed", it) }
+                .map { logger.info("{} succeeded.", date) }
+                .mapLeft { logger.error("{} failed. error: {}", date) }
     }
 
     companion object {
