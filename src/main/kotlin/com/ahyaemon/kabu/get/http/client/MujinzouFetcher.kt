@@ -15,18 +15,18 @@ class MujinzouFetcher(
         @param:Named("mujinzou") private val httpClient: HttpClient
 ) {
     fun get(dateTime: OffsetDateTime): Either<Throwable, ByteArray> {
+        val blockingHttpClient = httpClient.toBlocking()
         return try {
-            Either.right(httpClient
-                    .toBlocking()
-                    .retrieve(
-                            HttpRequest.GET<Any>(createUrl(dateTime)),
-                            ByteArray::class.java
-                    ))
+            Either.right(blockingHttpClient.retrieve(
+                    HttpRequest.GET<Any>(createUrl(dateTime)),
+                    ByteArray::class.java
+            ))
         } catch (e: Exception) {
             Either.left(e)
+        } finally {
+            blockingHttpClient.close()
         }
     }
 
     fun createUrl(dateTime: OffsetDateTime): String = "/k_data/${dateTime.year}/${dateTime.yy()}_${dateTime.mm()}/${dateTime.zipFileName()}"
 }
-

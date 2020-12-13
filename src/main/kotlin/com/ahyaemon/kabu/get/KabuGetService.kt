@@ -22,31 +22,19 @@ class KabuGetService(
     fun get(dateTime: OffsetDateTime, dirPath: Path): Either<Throwable, KabuGetResult> {
         return mujinzouFetcher.get(dateTime) // zip 取得
                 .flatMap{ zipByteArray ->
-                    logger.info("get zip file: success")
-
                     // zip 保存
                     val zipFilePath = Paths.get(dirPath.toString(), dateTime.zipFileName())
                     localRepository.save(zipByteArray, zipFilePath)
                 }.flatMap { zipFilePath ->
-                    logger.info("save zip file: success")
-
                     // 解凍
                     zipUtil.unzip(zipFilePath)
                 }.flatMap { zip ->
-                    logger.info("unzip file: success")
-
                     // 解凍したやつ保存
                     val csvFilePath = Paths.get(dirPath.toString(), zip.name)
                     localRepository.save(zip.content, csvFilePath)
                 }.map {
-                    logger.info("save csv file: success")
-
                     KabuGetResult(it)
                 }
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(KabuGetService::class.java)
     }
 }
 
