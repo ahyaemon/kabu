@@ -23,14 +23,14 @@ class KabuGetService(
         return mujinzouFetcher.get(dateTime) // zip 取得
                 .flatMap{ zipByteArray ->
                     // zip 保存
-                    val zipFilePath = Paths.get(dirPath.toString(), dateTime.zipFileName())
+                    val zipFilePath = Paths.get(dirPath.toString(), "zip", dateTime.zipFileName())
                     localRepository.save(zipByteArray, zipFilePath)
                 }.flatMap { zipFilePath ->
                     // 解凍
                     zipUtil.unzip(zipFilePath)
                 }.flatMap { zip ->
                     // 解凍したやつ保存
-                    val csvFilePath = Paths.get(dirPath.toString(), zip.name)
+                    val csvFilePath = Paths.get(dirPath.toString(), "csv", zip.name)
                     localRepository.save(zip.content, csvFilePath)
                 }.map {
                     KabuGetResult(it)

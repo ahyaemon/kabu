@@ -1,6 +1,5 @@
 package com.ahyaemon.kabu.get
 
-import arrow.core.extensions.either.monad.forEffect
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import picocli.CommandLine
