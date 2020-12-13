@@ -19,7 +19,7 @@ internal class LocalRepositoryTest {
         val either = localRepository.save(byteArray, path)
 
         path.toFile().readBytes() shouldBe byteArray
-        either shouldBe Either.right(Unit)
+        either shouldBe Either.right(path)
     }
 
     @Test

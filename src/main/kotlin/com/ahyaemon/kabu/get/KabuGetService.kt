@@ -1,23 +1,55 @@
 package com.ahyaemon.kabu.get
 
+import arrow.core.Either
+import arrow.core.flatMap
+import com.ahyaemon.kabu.LocalRepository
+import com.ahyaemon.kabu.get.extensions.zipFileName
 import com.ahyaemon.kabu.get.http.client.MujinzouFetcher
+import com.ahyaemon.kabu.get.zip.ZipUtil
+import org.slf4j.LoggerFactory
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.OffsetDateTime
 import javax.inject.Singleton
 
 @Singleton
 class KabuGetService(
-        private val mujinzouFetcher: MujinzouFetcher
+        private val mujinzouFetcher: MujinzouFetcher,
+        private val localRepository: LocalRepository,
+        private val zipUtil: ZipUtil
 ) {
 
-    fun get(dateTime: OffsetDateTime) {
-        // zip 取得
-        val zipByteArray = mujinzouFetcher.get(dateTime)
+    fun get(dateTime: OffsetDateTime, dirPath: Path): Either<Throwable, KabuGetResult> {
+        return mujinzouFetcher.get(dateTime) // zip 取得
+                .flatMap{ zipByteArray ->
+                    logger.info("get zip file: success")
 
-        // zip 保存
+                    // zip 保存
+                    val zipFilePath = Paths.get(dirPath.toString(), dateTime.zipFileName())
+                    localRepository.save(zipByteArray, zipFilePath)
+                }.flatMap { zipFilePath ->
+                    logger.info("save zip file: success")
 
-        // zip 解凍
+                    // 解凍
+                    zipUtil.unzip(zipFilePath)
+                }.flatMap { zip ->
+                    logger.info("unzip file: success")
 
-        // 解凍したやつ保存
+                    // 解凍したやつ保存
+                    val csvFilePath = Paths.get(dirPath.toString(), zip.name)
+                    localRepository.save(zip.content, csvFilePath)
+                }.map {
+                    logger.info("save csv file: success")
 
+                    KabuGetResult(it)
+                }
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(KabuGetService::class.java)
     }
 }
+
+data class KabuGetResult(
+        val csvFilePath: Path
+)

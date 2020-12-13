@@ -7,10 +7,10 @@ import javax.inject.Singleton
 @Singleton
 class LocalRepository {
 
-    fun save(target: ByteArray, path: Path): Either<Throwable, Unit> {
+    fun save(target: ByteArray, path: Path): Either<Throwable, Path> {
         return try {
             path.toFile().writeBytes(target)
-            Either.right(Unit)
+            Either.right(path)
         } catch (e: Exception){
             Either.left(e)
         }

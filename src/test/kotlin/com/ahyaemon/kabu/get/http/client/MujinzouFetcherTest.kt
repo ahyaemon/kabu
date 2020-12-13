@@ -16,7 +16,7 @@ internal class MujinzouFetcherTest {
 
     @Test
     fun createUrl_2020_1_6() {
-        val httpClient = MujinzouClientFactory().mujinzouClient()
+        val httpClient = MujinzouClientFactory().httpClient()
         val mujinzouFetcher = MujinzouFetcher(httpClient)
         val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
         val actual = mujinzouFetcher.createUrl(offsetDateTime)
@@ -30,7 +30,7 @@ internal class MujinzouFetcherTest {
     @Test
     @Disabled
     fun get_2020_1_6() {
-        val httpClient = MujinzouClientFactory().mujinzouClient()
+        val httpClient = MujinzouClientFactory().httpClient()
         val mujinzouFetcher = MujinzouFetcher(httpClient)
         val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
         val actual = mujinzouFetcher.get(offsetDateTime)
