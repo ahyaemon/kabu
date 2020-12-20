@@ -1,5 +1,6 @@
-package com.ahyaemon.kabu.get
+package com.ahyaemon.kabu.subcommands.get
 
+import com.ahyaemon.kabu.models.KabuDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import picocli.CommandLine
@@ -31,9 +32,8 @@ class KabuGetCommand(
 
     override fun run() {
         val path = Paths.get(directory)
-        val sp = date.split("-").map { it.toInt() }
-        val offsetDateTime = OffsetDateTime.of(sp[0], sp[1], sp[2], 0, 0, 0, 0, ZoneOffset.of("+9"))
-        kabuGetService.get(offsetDateTime, path)
+        val date = KabuDate.fromDate(date)
+        kabuGetService.get(date, path)
                 .map { logger.info("{} succeeded.", date) }
                 .mapLeft { logger.error("{} failed. error: {}", date) }
     }

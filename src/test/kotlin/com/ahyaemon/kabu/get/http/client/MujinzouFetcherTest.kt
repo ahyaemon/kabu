@@ -1,6 +1,9 @@
 package com.ahyaemon.kabu.get.http.client
 
 import arrow.core.Either
+import com.ahyaemon.kabu.models.KabuDate
+import com.ahyaemon.kabu.subcommands.get.http.client.MujinzouClientFactory
+import com.ahyaemon.kabu.subcommands.get.http.client.MujinzouFetcher
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.BlockingHttpClient
@@ -15,26 +18,14 @@ import java.time.ZoneOffset
 
 internal class MujinzouFetcherTest {
 
-    @Test
-    fun createUrl_2020_1_6() {
-        val httpClient = MujinzouClientFactory().httpClient()
-        val mujinzouFetcher = MujinzouFetcher(httpClient)
-        val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
-        val actual = mujinzouFetcher.createUrl(offsetDateTime)
-
-        val expected = "/k_data/2020/20_01/T200106.zip"
-
-        actual shouldBe expected
-    }
-
     // 実際にリクエストが走る
     @Test
     @Disabled
     fun get_2020_1_6() {
         val httpClient = MujinzouClientFactory().httpClient()
         val mujinzouFetcher = MujinzouFetcher(httpClient)
-        val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
-        val actual = mujinzouFetcher.get(offsetDateTime)
+        val date = KabuDate.fromDate("2020-01-06")
+        val actual = mujinzouFetcher.get(date)
 
         val expected = ClassLoader.getSystemResourceAsStream("T200106.zip")?.readAllBytes()
 
@@ -52,8 +43,8 @@ internal class MujinzouFetcherTest {
         every { blockingHttpClient.close() } returns Unit
 
         val mujinzouFetcher = MujinzouFetcher(httpClient)
-        val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
-        val actual = mujinzouFetcher.get(offsetDateTime)
+        val date = KabuDate.fromDate("2020-01-06")
+        val actual = mujinzouFetcher.get(date)
 
         actual shouldBe Either.right(zipByteArray)
     }
@@ -68,8 +59,8 @@ internal class MujinzouFetcherTest {
         every { blockingHttpClient.close() } returns Unit
 
         val mujinzouFetcher = MujinzouFetcher(httpClient)
-        val offsetDateTime = OffsetDateTime.of(2020, 1, 6, 0, 0, 0, 0, ZoneOffset.of("+9"))
-        val actual = mujinzouFetcher.get(offsetDateTime)
+        val date = KabuDate.fromDate("2020-01-06")
+        val actual = mujinzouFetcher.get(date)
 
         actual shouldBe Either.left(error)
     }

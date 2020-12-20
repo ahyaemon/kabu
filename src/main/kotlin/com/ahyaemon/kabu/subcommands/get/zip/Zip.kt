@@ -1,4 +1,4 @@
-package com.ahyaemon.kabu.get.zip
+package com.ahyaemon.kabu.subcommands.get.zip
 
 data class Zip(
         val name: String,

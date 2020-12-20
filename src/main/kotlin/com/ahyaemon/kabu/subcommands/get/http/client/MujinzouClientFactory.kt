@@ -1,4 +1,4 @@
-package com.ahyaemon.kabu.get.http.client
+package com.ahyaemon.kabu.subcommands.get.http.client
 
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory

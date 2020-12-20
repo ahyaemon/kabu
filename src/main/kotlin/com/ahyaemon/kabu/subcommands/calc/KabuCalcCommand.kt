@@ -1,4 +1,4 @@
-package com.ahyaemon.kabu.calc
+package com.ahyaemon.kabu.subcommands.calc
 
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine

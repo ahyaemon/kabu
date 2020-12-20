@@ -1,4 +1,4 @@
-package com.ahyaemon.kabu.get.zip
+package com.ahyaemon.kabu.subcommands.get.zip
 
 import arrow.core.Either
 import java.nio.file.FileSystems
@@ -10,10 +10,12 @@ import javax.inject.Singleton
 class ZipUtil {
     fun unzip(path: Path): Either<Throwable, Zip> {
         return FileSystems.newFileSystem(path, null).let { fs ->
-            Either.right(Zip(
+            Either.right(
+                Zip(
                     name = path.getCsvName(),
                     content = Files.newInputStream(fs.getPath(path.getCsvName())).readAllBytes()
-            ))
+            )
+            )
         }
     }
 

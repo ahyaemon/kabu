@@ -1,6 +1,7 @@
 package com.ahyaemon.kabu
 
 import arrow.core.Either
+import com.ahyaemon.kabu.models.KabuDate
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -33,5 +34,35 @@ internal class LocalRepositoryTest {
         val either = localRepository.save(byteArray, path)
 
         either shouldBe Either.left(error)
+    }
+
+    @Test
+    fun readFileAsString_success() {
+        val localRepository = LocalRepository()
+        val csvPath = Paths.get(ClassLoader.getSystemResource("hoge.csv").path)
+
+        val either = localRepository.readFileAsString(csvPath)
+
+        either shouldBe Either.right("hoge\n")
+    }
+
+    @Test
+    fun readDateFile_success() {
+        val localRepository = LocalRepository()
+        val dateFilePath = Paths.get(ClassLoader.getSystemResource("data/chart/date.txt").path)
+
+        val either = localRepository.readDateFile(dateFilePath)
+
+        either shouldBe Either.right(KabuDate.fromYYMMDD("201209"))
+    }
+
+    @Test
+    fun ls_success() {
+        val localRepository = LocalRepository()
+        val dirPath = Paths.get(ClassLoader.getSystemResource("dir").path)
+
+        val either = localRepository.ls(dirPath)
+
+        either.shouldBe(Either.right(listOf("a.txt", "b.txt")))
     }
 }

@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
     jcenter()
 
-    // for arrowkt
+    // for arrow kt
     maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
 }
 

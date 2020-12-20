@@ -1,4 +1,4 @@
-package com.ahyaemon.kabu.get.extensions
+package com.ahyaemon.kabu.subcommands.get.extensions
 
 import java.time.OffsetDateTime
 
