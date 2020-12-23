@@ -20,6 +20,8 @@ data class KabuDate(
     fun isNewerThan(k: KabuDate): Boolean = this.dateTime.isAfter(k.dateTime)
     fun newer(k: KabuDate): KabuDate = if (this.isNewerThan(k)) this else k
 
+    fun hyphenSeparatedDate(): String = "${dateTime.year}-${mm()}-${dd()}"
+
     companion object {
 
         // date: yyyy-mm-dd
@@ -32,6 +34,12 @@ data class KabuDate(
         // date: yymmdd
         fun fromYYMMDD(date: String, zoneOffset: ZoneOffset = ZoneOffset.of("+9")): KabuDate {
             val sp = listOf("20" + date.substring(0, 2), date.substring(2, 4), date.substring(4, 6)).map { it.toInt() }
+            val offsetDateTime = OffsetDateTime.of(sp[0], sp[1], sp[2], 0, 0, 0, 0, zoneOffset)
+            return KabuDate(offsetDateTime)
+        }
+
+        fun fromSlashSeparated(date: String, zoneOffset: ZoneOffset = ZoneOffset.of("+9")): KabuDate {
+            val sp = date.split("/").map { it.toInt() }
             val offsetDateTime = OffsetDateTime.of(sp[0], sp[1], sp[2], 0, 0, 0, 0, zoneOffset)
             return KabuDate(offsetDateTime)
         }

@@ -1,9 +1,8 @@
 package com.ahyaemon.kabu.get
 
 import arrow.core.Either
-import com.ahyaemon.kabu.LocalRepository
+import com.ahyaemon.kabu.LocalRepositoryImpl
 import com.ahyaemon.kabu.models.KabuDate
-import com.ahyaemon.kabu.subcommands.get.extensions.csvFileName
 import com.ahyaemon.kabu.subcommands.get.http.client.MujinzouClientFactory
 import com.ahyaemon.kabu.subcommands.get.http.client.MujinzouFetcher
 import com.ahyaemon.kabu.subcommands.get.zip.ZipUtil
@@ -14,8 +13,6 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 internal class KabuGetServiceTest {
 
@@ -25,7 +22,7 @@ internal class KabuGetServiceTest {
     fun get() {
         val mujinzouClient = MujinzouClientFactory().httpClient()
         val mujinzouFetcher = MujinzouFetcher(mujinzouClient)
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val zipUtil = ZipUtil()
         val kabuGetService = KabuGetService(mujinzouFetcher, localRepository, zipUtil)
 

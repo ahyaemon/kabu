@@ -1,8 +1,8 @@
 package com.ahyaemon.kabu
 
-import com.ahyaemon.kabu.subcommands.calc.KabuCalcCommand
 import com.ahyaemon.kabu.subcommands.chart.KabuChartCommand
 import com.ahyaemon.kabu.subcommands.get.KabuGetCommand
+import com.ahyaemon.kabu.subcommands.adjust.KabuAdjustCommand
 import io.micronaut.configuration.picocli.PicocliRunner
 
 import picocli.CommandLine.Command
@@ -11,7 +11,11 @@ import picocli.CommandLine.Command
         name = "kabu",
         description = ["..."],
         mixinStandardHelpOptions = true,
-        subcommands = [KabuGetCommand::class, KabuCalcCommand::class, KabuChartCommand::class]
+        subcommands = [
+            KabuGetCommand::class,
+            KabuChartCommand::class,
+            KabuAdjustCommand::class
+        ]
 )
 class KabuCommand : Runnable {
 
@@ -22,7 +26,7 @@ class KabuCommand : Runnable {
     }
 
     override fun run() {
-        println("sub commands: get, calc")
+        println("sub commands: get, chart, adjust")
     }
 }
 

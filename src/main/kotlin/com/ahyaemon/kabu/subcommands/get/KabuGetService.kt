@@ -2,22 +2,18 @@ package com.ahyaemon.kabu.subcommands.get
 
 import arrow.core.Either
 import arrow.core.flatMap
-import com.ahyaemon.kabu.LocalRepository
+import com.ahyaemon.kabu.LocalRepositoryImpl
 import com.ahyaemon.kabu.extensions.addChild
 import com.ahyaemon.kabu.models.KabuDate
-import com.ahyaemon.kabu.subcommands.get.extensions.zipFileName
 import com.ahyaemon.kabu.subcommands.get.http.client.MujinzouFetcher
 import com.ahyaemon.kabu.subcommands.get.zip.ZipUtil
-import org.slf4j.LoggerFactory
 import java.nio.file.Path
-import java.nio.file.Paths
-import java.time.OffsetDateTime
 import javax.inject.Singleton
 
 @Singleton
 class KabuGetService(
     private val mujinzouFetcher: MujinzouFetcher,
-    private val localRepository: LocalRepository,
+    private val localRepository: LocalRepositoryImpl,
     private val zipUtil: ZipUtil
 ) {
 

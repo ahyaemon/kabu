@@ -30,4 +30,12 @@ internal class KabuDateTest {
 
         kabuDate.dateTime shouldBe offsetDateTime
     }
+
+    @Test
+    fun fromSlashSeparated() {
+        val kabuDate = KabuDate.fromSlashSeparated("2020/12/24")
+        val offsetDateTime = OffsetDateTime.of(2020, 12, 24, 0, 0, 0, 0, ZoneOffset.of("+9"))
+
+        kabuDate.dateTime shouldBe offsetDateTime
+    }
 }

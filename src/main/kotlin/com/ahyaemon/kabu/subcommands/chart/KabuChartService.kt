@@ -2,7 +2,7 @@ package com.ahyaemon.kabu.subcommands.chart
 
 import arrow.core.Either
 import arrow.core.flatMap
-import com.ahyaemon.kabu.LocalRepository
+import com.ahyaemon.kabu.LocalRepositoryImpl
 import com.ahyaemon.kabu.extensions.addChild
 import com.ahyaemon.kabu.models.KabuDate
 import org.slf4j.LoggerFactory
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class KabuChartService(
-        private val localRepository: LocalRepository
+        private val localRepository: LocalRepositoryImpl
 ) {
 
     private val dateFileName = "date.txt"

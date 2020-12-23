@@ -1,6 +1,6 @@
 package com.ahyaemon.kabu.chart
 
-import com.ahyaemon.kabu.LocalRepository
+import com.ahyaemon.kabu.LocalRepositoryImpl
 import com.ahyaemon.kabu.extensions.addChild
 import com.ahyaemon.kabu.subcommands.chart.KabuChartService
 import io.kotest.matchers.shouldBe
@@ -38,7 +38,7 @@ internal class KabuChartServiceTest {
 
     @Test
     fun chart_success_new() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val kabuChartService = KabuChartService(localRepository)
 
         // test 用 csv を tmp ディレクトリにコピー
@@ -56,7 +56,7 @@ internal class KabuChartServiceTest {
 
     @Test
     fun chart_success_append_withDate() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val kabuChartService = KabuChartService(localRepository)
 
         // test 用 csv を tmp ディレクトリにコピー

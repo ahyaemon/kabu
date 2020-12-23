@@ -13,7 +13,7 @@ internal class LocalRepositoryTest {
 
     @Test
     fun save_success() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val byteArray = "abc".toByteArray()
         val path = Paths.get("/tmp/com.ahyaemon.kabu.LocalRepositoryTest.kt.test")
 
@@ -25,7 +25,7 @@ internal class LocalRepositoryTest {
 
     @Test
     fun save_failure() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val byteArray = "abc".toByteArray()
         val path = mockk<Path>()
         val error = RuntimeException("ERROR!!")
@@ -38,7 +38,7 @@ internal class LocalRepositoryTest {
 
     @Test
     fun readFileAsString_success() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val csvPath = Paths.get(ClassLoader.getSystemResource("hoge.csv").path)
 
         val either = localRepository.readFileAsString(csvPath)
@@ -48,7 +48,7 @@ internal class LocalRepositoryTest {
 
     @Test
     fun readDateFile_success() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val dateFilePath = Paths.get(ClassLoader.getSystemResource("data/chart/date.txt").path)
 
         val either = localRepository.readDateFile(dateFilePath)
@@ -58,7 +58,7 @@ internal class LocalRepositoryTest {
 
     @Test
     fun ls_success() {
-        val localRepository = LocalRepository()
+        val localRepository = LocalRepositoryImpl()
         val dirPath = Paths.get(ClassLoader.getSystemResource("dir").path)
 
         val either = localRepository.ls(dirPath)
