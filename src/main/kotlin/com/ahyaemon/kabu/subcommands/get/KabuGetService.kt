@@ -18,6 +18,8 @@ class KabuGetService(
 ) {
 
     fun get(date: KabuDate, dirPath: Path): Either<Throwable, KabuGetResult> {
+        // FIXME もし zip が存在していたら、ローカルファイルを使用する
+
         return mujinzouFetcher.get(date) // zip 取得
                 .flatMap{ zipByteArray ->
                     // zip 保存

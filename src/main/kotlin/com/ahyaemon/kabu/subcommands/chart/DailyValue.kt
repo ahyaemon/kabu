@@ -13,7 +13,7 @@ data class DailyValue (
     val maxValue: Double,
     val minValue: Double,
     val endValue: Double,
-    val volume: Int,
+    val volume: Long,
     val place: String
 ) {
 
@@ -41,7 +41,7 @@ data class DailyValue (
                 maxValue = sp[5].toDouble(),
                 minValue = sp[6].toDouble(),
                 endValue = sp[7].toDouble(),
-                volume = sp[8].toInt(),
+                volume = sp[8].toLong(),
                 place = sp[9]
             )
         }

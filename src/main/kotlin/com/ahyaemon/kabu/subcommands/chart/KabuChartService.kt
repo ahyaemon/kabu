@@ -20,7 +20,7 @@ class KabuChartService(
         // 何日まで処理済みか取得
         val chartDir = path.addChild("chart")
         val dateTxtPath = chartDir.addChild(dateFileName)
-        val result = localRepository.readDateFile(dateTxtPath)
+        return localRepository.readDateFile(dateTxtPath)
             .flatMap { savedKabuDate ->
                 // csv の一覧を取得
                 val csvDir = path.addChild("csv")
@@ -33,6 +33,8 @@ class KabuChartService(
             }
             .map { kabuDates ->
                 kabuDates.map { kabuDate ->
+                    logger.info("{} chart creating...", kabuDate.date())
+
                     localRepository.readFileAsLines(path.addChild("csv").addChild(kabuDate.csvFileName()))
                         .map { csvLines -> DailyValue.fromCsv(csvLines) }
                         .map { dailyValues ->
@@ -50,10 +52,10 @@ class KabuChartService(
                 logger.error("failed to create chart", it)
                 it
             }
-        return Either.right(Unit)
+            .map {}
     }
 
     companion object {
-        val logger = LoggerFactory.getLogger(KabuChartService::class.java)
+        private val logger = LoggerFactory.getLogger(KabuChartService::class.java)
     }
 }

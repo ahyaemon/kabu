@@ -19,7 +19,7 @@ class MujinzouFetcher(
         val blockingHttpClient = httpClient.toBlocking()
         return try {
             Either.right(blockingHttpClient.retrieve(
-                    HttpRequest.GET<Any>(date.zipFileName()),
+                    HttpRequest.GET<Any>(date.kDataUrl()),
                     ByteArray::class.java
             ))
         } catch (e: Exception) {

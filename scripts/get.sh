@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mkdir -p ./data/zip
-mkdir -p ./data/csv
-
-readonly count=10
+readonly count=100
 readonly path="./data"
+
+mkdir -p $path/zip
+mkdir -p $path/csv
 
 for((i=$count-1; i>=0; i--))
 do
