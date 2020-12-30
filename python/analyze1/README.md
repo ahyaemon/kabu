@@ -11,14 +11,23 @@
     - 相関係数
 
 ### 引数
-- 比較元 csv のパス
-- 比較先 csv のパス
+- data フォルダのパス
+- 比較元 csv のファイル名
+- 比較先 csv のファイル名
     - こっちをずらして相関を計算する
-- 出力先ディレクトリのパス
+
+### 設定
+analyze1.py に直接書く
+
 - 移動平均の数
 - csv のどのカラムを使うか
+    - 1: 始値
+    - 2: 高値
+    - 3: 安値
+    - 4: 終値
 
+### 実行コマンド例
 ```shell script
 # python ディレクトリで
-python analyze1/analyze1.py ../data/chart/9980_ＭＲＫホール.csv ../data/chart/9979_大庄.csv data/analyze/analyze1 3 1
+python analyze1/analyze1.py ../data 2153_ＥＪホール.csv 2060_フィードワンＨ.csv
 ```

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-readonly count=100
+readonly count=400
 readonly path="./data"
 
 mkdir -p $path/zip
