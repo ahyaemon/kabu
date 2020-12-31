@@ -49,7 +49,7 @@ internal class LocalRepositoryTest {
     @Test
     fun readDateFile_success() {
         val localRepository = LocalRepositoryImpl()
-        val dateFilePath = Paths.get(ClassLoader.getSystemResource("data/chart/date.txt").path)
+        val dateFilePath = Paths.get(ClassLoader.getSystemResource("KabuChartServiceTest/data/chart/date.txt").path)
 
         val either = localRepository.readDateFile(dateFilePath)
 

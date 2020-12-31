@@ -15,7 +15,7 @@ internal class DailyValueTest {
 
     @Test
     fun fromCsv_20201207() {
-        val csvLines = Paths.get(ClassLoader.getSystemResource("data/csv/T201207.csv").path).toFile().readLines(Charset.forName("Shift-JIS"))
+        val csvLines = Paths.get(ClassLoader.getSystemResource("DailyValueTest/T201207.csv").path).toFile().readLines(Charset.forName("Shift-JIS"))
 
         val dailyValues = DailyValue.fromCsv(csvLines)
 
@@ -37,7 +37,7 @@ internal class DailyValueTest {
 
     @Test
     fun fromCsv_20201208() {
-        val csvLines = Paths.get(ClassLoader.getSystemResource("data/csv/T201208.csv").path).toFile().readLines(Charset.forName("Shift-JIS"))
+        val csvLines = Paths.get(ClassLoader.getSystemResource("DailyValueTest/T201208.csv").path).toFile().readLines(Charset.forName("Shift-JIS"))
 
         val dailyValues = DailyValue.fromCsv(csvLines)
 
@@ -76,9 +76,9 @@ internal class DailyValueTest {
     }
 
     @Test
-    fun toChartString_20201208() {
+    fun toChartString_20201228() {
         val nikkei225 = DailyValue(
-            date = createDate(2020, 12, 8),
+            date = createDate(2020, 12, 28),
             id = "1001",
             n = "11",
             idWithName = "1001_日経２２５",
@@ -90,6 +90,6 @@ internal class DailyValueTest {
             place = "東証１部"
         )
 
-        nikkei225.toChartString() shouldBe "2020-12-08,26380.0,26523.0,26327.0,26467.0,1029910000"
+        nikkei225.toChartString() shouldBe "2020-12-28,26380.0,26523.0,26327.0,26467.0,1029910000"
     }
 }

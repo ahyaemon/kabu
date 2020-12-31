@@ -18,7 +18,7 @@ data class DailyValue (
 ) {
 
     fun toChartString(): String {
-        val d = date.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
+        val d = date.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"))
         return "$d,$beginValue,$maxValue,$minValue,$endValue,$volume"
     }
 

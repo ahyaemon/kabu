@@ -105,6 +105,8 @@ if __name__ == '__main__':
     data_amount = len(df_origin_adjusted) - properties.mean_count + 1
     df_corr = pd.DataFrame(columns=["days", "corr", "n"])
     for i in range(data_amount):
+        print(i)
+
         beg_origin = properties.mean_count - 1 + i
         end_origin = len(df_origin_adjusted) - 1
         series_origin = df_origin_adjusted.loc[beg_origin:end_origin, "normalized"]

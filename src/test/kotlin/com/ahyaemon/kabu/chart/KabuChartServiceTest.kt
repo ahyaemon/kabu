@@ -19,7 +19,7 @@ data class Directories(
 internal class KabuChartServiceTest {
 
     private fun createTestDirectories(): Directories {
-        val fromDataPath = Paths.get(ClassLoader.getSystemResource("data").path)
+        val fromDataPath = Paths.get(ClassLoader.getSystemResource("KabuChartServiceTest/data").path)
         val fromCsvPath = fromDataPath.addChild("csv")
         val toDataPath = fromDataPath.addChild(UUID.randomUUID().toString()).also { println(it) }
         val toCsvPath = toDataPath.addChild("csv")
@@ -69,7 +69,7 @@ internal class KabuChartServiceTest {
         topixFile.writeText("")
 
         // ファイルの中身が 3 行になるように date.txt を作っておく
-        toChartPath.addChild("date.txt").toFile().writeText("201208")
+        toChartPath.addChild("date.txt").toFile().writeText("201224")
 
         val result = kabuChartService.chart(toDataPath)
 
