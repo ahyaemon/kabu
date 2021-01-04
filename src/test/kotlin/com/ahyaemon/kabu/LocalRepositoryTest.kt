@@ -53,7 +53,7 @@ internal class LocalRepositoryTest {
 
         val either = localRepository.readDateFile(dateFilePath)
 
-        either shouldBe Either.right(KabuDate.fromYYMMDD("201209"))
+        either shouldBe Either.right(KabuDate.fromYYMMDD("201225"))
     }
 
     @Test

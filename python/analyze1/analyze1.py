@@ -49,10 +49,23 @@ class Preprocessor:
         self.mean_count = mean_count
 
     def preprocess(self, df: pd.DataFrame, code: str) -> pd.DataFrame:
-        df_splitted = self._adjust(df, self.split_path, code, lambda series, ratio: series * ratio)
+        # 日付順にソート
+        df_sorted = df.sort_values(by="date")
+
+        # 株式分割
+        df_splitted = self._adjust(df_sorted, self.split_path, code, lambda series, ratio: series * ratio)
+
+        # 株式併合
         df_merged = self._adjust(df_splitted, self.merge_path, code, lambda series, ratio: series / ratio)
+
+        # 移動平均
         df_merged["mean"] = self.mean(df_merged["value"], self.mean_count)
+
+        # 正規化
         df_normalized = self._normalize(df_merged)
+
+        # インデックスを振り直す
+        df_normalized.index = pd.RangeIndex(0, len(df), 1)
 
         return df_normalized
 
@@ -100,27 +113,31 @@ if __name__ == '__main__':
     df_target.columns = ["date", "value"]
     df_target_adjusted = preprocessor.preprocess(df_target, properties.code_target)
 
+    # TODO 保存先ディレクトリを作成
+
     # 1 日ずつずらしながら相関係数を計算する
     # ずらした日数、相関係数、計算に使ったデータの数で csv を作る
     data_amount = len(df_origin_adjusted) - properties.mean_count + 1
     df_corr = pd.DataFrame(columns=["days", "corr", "n"])
     for i in range(data_amount):
-        print(i)
-
         beg_origin = properties.mean_count - 1 + i
         end_origin = len(df_origin_adjusted) - 1
         series_origin = df_origin_adjusted.loc[beg_origin:end_origin, "normalized"]
+        series_origin.index = pd.RangeIndex(0, len(series_origin), 1)
 
         beg_target = properties.mean_count - 1
         end_target = len(df_target_adjusted) - 1 - i
         series_target = df_target_adjusted.loc[beg_target:end_target, "normalized"]
+        series_target.index = pd.RangeIndex(0, len(series_target), 1)
 
         corr = pd.DataFrame({"origin": series_origin, "target": series_target}).corr().iloc[0, 1]
 
         df_corr = df_corr.append({"days": i, "corr": corr, "n": len(series_origin)}, ignore_index=True)
 
         # corr が0.95 以上の場合、図を保存する
-        if corr >= 0.95:
+        if abs(corr) >= 0.9:
+            print(i)
+            print("corr >= 0.95")
             fig = plt.figure()
 
             series_date = df_origin_adjusted.loc[beg_origin:end_origin, "date"]
@@ -132,7 +149,6 @@ if __name__ == '__main__':
             plt.plot(df_plot["date"], df_plot["target"], label="date")
 
             plt.xticks(rotation=90)
-            plt.show()
 
             image_filename = properties.code_origin + "_" + properties.code_target + "_" + str(i) + ".jpg"
             fig.savefig(properties.data_directory + "/analyze/analyze1/" + image_filename)
