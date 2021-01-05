@@ -15,6 +15,7 @@
 - 比較元 csv のファイル名
 - 比較先 csv のファイル名
     - こっちをずらして相関を計算する
+- 出力するディレクトリ名
 
 ### 設定
 analyze1.py に直接書く
@@ -29,5 +30,5 @@ analyze1.py に直接書く
 ### 実行コマンド例
 ```shell script
 # python ディレクトリで
-python analyze1/analyze1.py ../data 2153_ＥＪホール.csv 2060_フィードワンＨ.csv
+python analyze1/analyze1.py ../data 2153_ＥＪホール.csv 2060_フィードワンＨ.csv tmp
 ```

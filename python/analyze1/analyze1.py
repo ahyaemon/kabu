@@ -4,42 +4,51 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 from sklearn import preprocessing
+import os
 
 
 class Properties:
     def __init__(self, args):
-        self.data_directory = args[1]
+        data_directory = args[1]
 
-        self.origin_filename = args[2]
+        origin_filename = args[2]
 
-        self.target_filename = args[3]
+        target_filename = args[3]
+
+        output_directory_name = args[4]
 
         # 比較元銘柄コード
-        self.code_origin = self.origin_filename.split("_")[0]
+        self.code_origin = origin_filename.split("_")[0]
 
         # 比較先銘柄コード
-        self.code_target = self.target_filename.split("_")[0]
+        self.code_target = target_filename.split("_")[0]
 
         # 比較元 csv のパス
-        self.origin_path = self.data_directory + "/chart/" + self.origin_filename
+        self.origin_path = data_directory + "/chart/" + origin_filename
 
         # 比較先 csv のパス
-        self.target_path = self.data_directory + "/chart/" + self.target_filename
+        self.target_path = data_directory + "/chart/" + target_filename
 
         # split ファイルのパス
-        self.split_path = self.data_directory + "/adjust/split/split.csv"
+        self.split_path = data_directory + "/adjust/split/split.csv"
 
         # merge ファイルのパス
-        self.merge_path = self.data_directory + "/adjust/merge/merge.csv"
+        self.merge_path = data_directory + "/adjust/merge/merge.csv"
 
         # 出力先ディレクトリのパス
-        self.output_directory = self.data_directory + "/analyze/analyze1"
+        self.output_directory = data_directory + "/analyze/analyze1/" + output_directory_name + "/" + self.code_origin
 
         # 移動平均に使用するデータの数
         self.mean_count = 3
 
         # データ解析に使用する列
         self.column = 1
+
+        # 図を保存するための相関係数の最低値
+        self.min_corr = 0.95
+
+        # 図を保存するための日数の最低値
+        self.min_used_days = 50
 
 
 class Preprocessor:
@@ -113,12 +122,13 @@ if __name__ == '__main__':
     df_target.columns = ["date", "value"]
     df_target_adjusted = preprocessor.preprocess(df_target, properties.code_target)
 
-    # TODO 保存先ディレクトリを作成
+    # 保存先ディレクトリを作成
+    os.makedirs(properties.output_directory, exist_ok=True)
 
     # 1 日ずつずらしながら相関係数を計算する
     # ずらした日数、相関係数、計算に使ったデータの数で csv を作る
     data_amount = len(df_origin_adjusted) - properties.mean_count + 1
-    df_corr = pd.DataFrame(columns=["days", "corr", "n"])
+    df_corr = pd.DataFrame(columns=["offset", "corr", "used_days"])
     for i in range(data_amount):
         beg_origin = properties.mean_count - 1 + i
         end_origin = len(df_origin_adjusted) - 1
@@ -132,12 +142,12 @@ if __name__ == '__main__':
 
         corr = pd.DataFrame({"origin": series_origin, "target": series_target}).corr().iloc[0, 1]
 
-        df_corr = df_corr.append({"days": i, "corr": corr, "n": len(series_origin)}, ignore_index=True)
+        used_days = len(series_origin)
+        df_corr = df_corr.append({"offset": i, "corr": corr, "used_days": used_days}, ignore_index=True)
 
-        # corr が0.95 以上の場合、図を保存する
-        if abs(corr) >= 0.9:
-            print(i)
-            print("corr >= 0.95")
+        # 条件を満たす場合に図を保存する
+        if (abs(corr) >= properties.min_corr) and (used_days >= properties.min_used_days):
+            print("HIT!!")
             fig = plt.figure()
 
             series_date = df_origin_adjusted.loc[beg_origin:end_origin, "date"]
@@ -151,8 +161,12 @@ if __name__ == '__main__':
             plt.xticks(rotation=90)
 
             image_filename = properties.code_origin + "_" + properties.code_target + "_" + str(i) + ".jpg"
-            fig.savefig(properties.data_directory + "/analyze/analyze1/" + image_filename)
+            fig.savefig(properties.output_directory + "/" + image_filename)
 
-    df_corr = df_corr.astype({"days": int})
+    # TODO 保存対象がひとつでもある場合、元のグラフも保存する
+
+
+    df_corr = df_corr.astype({"offset": int})
+    df_corr = df_corr.astype({"used_days": int})
     output_filename = properties.code_origin + "_" + properties.code_target + ".csv"
-    df_corr.to_csv(properties.data_directory + "/analyze/analyze1/" + output_filename)
+    df_corr.to_csv(properties.output_directory + "/" + output_filename)
