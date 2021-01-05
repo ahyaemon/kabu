@@ -39,7 +39,7 @@ class Properties:
         self.output_directory = data_directory + "/analyze/analyze1/" + output_directory_name + "/" + self.code_origin
 
         # 移動平均に使用するデータの数
-        self.mean_count = 3
+        self.mean_count = 10
 
         # データ解析に使用する列
         self.column = 1
@@ -129,6 +129,8 @@ if __name__ == '__main__':
     # ずらした日数、相関係数、計算に使ったデータの数で csv を作る
     data_amount = len(df_origin_adjusted) - properties.mean_count + 1
     df_corr = pd.DataFrame(columns=["offset", "corr", "used_days"])
+    hit_count = 0
+
     for i in range(data_amount):
         beg_origin = properties.mean_count - 1 + i
         end_origin = len(df_origin_adjusted) - 1
@@ -148,6 +150,7 @@ if __name__ == '__main__':
         # 条件を満たす場合に図を保存する
         if (abs(corr) >= properties.min_corr) and (used_days >= properties.min_used_days):
             print("HIT!!")
+            hit_count += 1
             fig = plt.figure()
 
             series_date = df_origin_adjusted.loc[beg_origin:end_origin, "date"]
@@ -162,9 +165,26 @@ if __name__ == '__main__':
 
             image_filename = properties.code_origin + "_" + properties.code_target + "_" + str(i) + ".jpg"
             fig.savefig(properties.output_directory + "/" + image_filename)
+            plt.close()
 
-    # TODO 保存対象がひとつでもある場合、元のグラフも保存する
+    # 保存対象がひとつでもある場合、元のグラフも保存する
+    if hit_count >= 1:
+        series_date = df_origin_adjusted.loc[:, "date"]
 
+        series_origin = df_origin_adjusted.loc[:, "normalized"]
+        series_origin.index = pd.RangeIndex(0, len(series_origin), 1)
+
+        series_target = df_target_adjusted.loc[:, "normalized"]
+        series_target.index = pd.RangeIndex(0, len(series_target), 1)
+
+        fig = plt.figure()
+        df_plot = pd.DataFrame({"date": series_date, "origin": series_origin, "target": series_target})
+        plt.plot(df_plot["date"], df_plot["origin"], label="date")
+        plt.plot(df_plot["date"], df_plot["target"], label="date")
+        plt.xticks(rotation=90)
+        image_filename = properties.code_origin + "_" + properties.code_target + "_0.jpg"
+        fig.savefig(properties.output_directory + "/" + image_filename)
+        plt.close()
 
     df_corr = df_corr.astype({"offset": int})
     df_corr = df_corr.astype({"used_days": int})
