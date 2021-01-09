@@ -48,7 +48,7 @@ class Properties:
         self.min_corr = 0.95
 
         # 図を保存するための日数の最低値
-        self.min_used_days = 30
+        self.min_used_days = 20
 
 
 class Preprocessor:
@@ -133,14 +133,13 @@ if __name__ == '__main__':
     df_corr = pd.DataFrame(columns=["offset", "corr", "used_days"])
     hit_count = 0
     for i in range(len(df_origin_adjusted)):
-        # TODO target が origin の後ろになるようにずらす
-        beg_origin = i
-        end_origin = len(df_origin_adjusted) - 1
+        beg_origin = 0
+        end_origin = len(df_origin_adjusted) - 1 - i
         series_origin = df_origin_adjusted.loc[beg_origin:end_origin, "normalized"]
         series_origin.index = pd.RangeIndex(0, len(series_origin), 1)
 
-        beg_target = 0
-        end_target = len(df_target_adjusted) - 1 - i
+        beg_target = i
+        end_target = len(df_target_adjusted) - 1
         series_target = df_target_adjusted.loc[beg_target:end_target, "normalized"]
         series_target.index = pd.RangeIndex(0, len(series_target), 1)
 
@@ -151,7 +150,7 @@ if __name__ == '__main__':
 
         # 条件を満たす場合に図を保存する
         if (abs(corr) >= properties.min_corr) and (used_days >= properties.min_used_days):
-            print("HIT!!")
+            print("HIT -- offset: " + str(i) + ", corr: " + str(corr) + ", used_days: " + str(used_days))
             hit_count += 1
             fig = plt.figure()
 
@@ -160,11 +159,12 @@ if __name__ == '__main__':
             series_target.index = series_date.index
             df_plot = pd.DataFrame({"date": series_date, "origin": series_origin, "target": series_target})
 
-            plt.plot(df_origin_adjusted["date"], df_origin_adjusted["normalized"], label="date", color="#000000")
-            plt.plot(df_plot["date"], df_plot["origin"], label="date", color="#00ff00")
-            plt.plot(df_plot["date"], df_plot["target"], label="date", color="#ff00ff")
-
-            plt.xticks(rotation=90)
+            plt.plot(df_origin_adjusted["date"], df_origin_adjusted["normalized"], label=properties.code_origin + "(full)", color="#000000")
+            plt.plot(df_plot["date"], df_plot["origin"], label=properties.code_origin, color="#00ff00")
+            plt.plot(df_plot["date"], df_plot["target"], label=properties.code_target, color="#ff00ff")
+            plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=0, fontsize=18)
+            plt.tick_params(bottom=False, labelbottom=False)
+            # plt.xticks(rotation=90)
 
             image_filename = properties.code_origin + "_" + properties.code_target + "_" + str(i) + ".jpg"
             fig.savefig(properties.output_directory + "/" + image_filename)
@@ -182,8 +182,9 @@ if __name__ == '__main__':
 
         fig = plt.figure()
         df_plot = pd.DataFrame({"date": series_date, "origin": series_origin, "target": series_target})
-        plt.plot(df_plot["date"], df_plot["origin"], label="date")
-        plt.plot(df_plot["date"], df_plot["target"], label="date")
+        plt.plot(df_plot["date"], df_plot["origin"], label=properties.code_origin)
+        plt.plot(df_plot["date"], df_plot["target"], label=properties.code_target)
+        plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=0, fontsize=18)
         plt.xticks(rotation=90)
         image_filename = properties.code_origin + "_" + properties.code_target + "_0.jpg"
         fig.savefig(properties.output_directory + "/" + image_filename)
