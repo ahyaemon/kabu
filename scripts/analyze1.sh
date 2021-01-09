@@ -7,5 +7,6 @@ source python/venv/bin/activate
 # とりあえず日経との相関だけみる
 for f in $(ls data/chart | grep -v date.txt | grep -v 1001)
 do
+  echo $f
   python python/analyze1/analyze1.py ./data 1001_日経２２５.csv $f $date
 done
