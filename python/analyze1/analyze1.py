@@ -48,7 +48,7 @@ class Properties:
         self.min_corr = 0.95
 
         # 図を保存するための日数の最低値
-        self.min_used_days = 50
+        self.min_used_days = 30
 
 
 class Preprocessor:
@@ -73,10 +73,13 @@ class Preprocessor:
         # 正規化
         df_normalized = self._normalize(df_merged)
 
-        # インデックスを振り直す
-        df_normalized.index = pd.RangeIndex(0, len(df), 1)
+        # NA のデータを消す
+        df_preprocessed = df_normalized[self.mean_count - 1:len(df_normalized)]
 
-        return df_normalized
+        # インデックスを振り直す
+        df_preprocessed.index = pd.RangeIndex(0, len(df_preprocessed), 1)
+
+        return df_preprocessed
 
     def _adjust(self, df: pd.DataFrame, path: str, code: str, f: Callable[[pd.Series, float], pd.Series]) -> pd.DataFrame:
         csv = pd.read_csv(path)
@@ -127,17 +130,16 @@ if __name__ == '__main__':
 
     # 1 日ずつずらしながら相関係数を計算する
     # ずらした日数、相関係数、計算に使ったデータの数で csv を作る
-    data_amount = len(df_origin_adjusted) - properties.mean_count + 1
     df_corr = pd.DataFrame(columns=["offset", "corr", "used_days"])
     hit_count = 0
-
-    for i in range(data_amount):
-        beg_origin = properties.mean_count - 1 + i
+    for i in range(len(df_origin_adjusted)):
+        # TODO target が origin の後ろになるようにずらす
+        beg_origin = i
         end_origin = len(df_origin_adjusted) - 1
         series_origin = df_origin_adjusted.loc[beg_origin:end_origin, "normalized"]
         series_origin.index = pd.RangeIndex(0, len(series_origin), 1)
 
-        beg_target = properties.mean_count - 1
+        beg_target = 0
         end_target = len(df_target_adjusted) - 1 - i
         series_target = df_target_adjusted.loc[beg_target:end_target, "normalized"]
         series_target.index = pd.RangeIndex(0, len(series_target), 1)
@@ -158,8 +160,9 @@ if __name__ == '__main__':
             series_target.index = series_date.index
             df_plot = pd.DataFrame({"date": series_date, "origin": series_origin, "target": series_target})
 
-            plt.plot(df_plot["date"], df_plot["origin"], label="date")
-            plt.plot(df_plot["date"], df_plot["target"], label="date")
+            plt.plot(df_origin_adjusted["date"], df_origin_adjusted["normalized"], label="date", color="#000000")
+            plt.plot(df_plot["date"], df_plot["origin"], label="date", color="#00ff00")
+            plt.plot(df_plot["date"], df_plot["target"], label="date", color="#ff00ff")
 
             plt.xticks(rotation=90)
 
