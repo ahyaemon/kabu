@@ -48,7 +48,7 @@ class Properties:
         self.min_corr = 0.95
 
         # 図を保存するための日数の最低値
-        self.min_used_days = 20
+        self.min_used_days = 50
 
 
 class Preprocessor:
