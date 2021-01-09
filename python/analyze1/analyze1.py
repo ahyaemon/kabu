@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
     # 1 日ずつずらしながら相関係数を計算する
     # ずらした日数、相関係数、計算に使ったデータの数で csv を作る
-    df_corr = pd.DataFrame(columns=["offset", "corr", "used_days"])
+    df_corr = pd.DataFrame(columns=["origin_date", "offset", "corr", "used_days"])
     hit_count = 0
     for i in range(len(df_origin_adjusted)):
         beg_origin = 0
@@ -146,7 +146,7 @@ if __name__ == '__main__':
         corr = pd.DataFrame({"origin": series_origin, "target": series_target}).corr().iloc[0, 1]
 
         used_days = len(series_origin)
-        df_corr = df_corr.append({"offset": i, "corr": corr, "used_days": used_days}, ignore_index=True)
+        df_corr = df_corr.append({"origin_date": df_origin_adjusted.loc[i, "date"], "offset": i, "corr": corr, "used_days": used_days}, ignore_index=True)
 
         # 条件を満たす場合に図を保存する
         if (abs(corr) >= properties.min_corr) and (used_days >= properties.min_used_days):
