@@ -185,7 +185,8 @@ if __name__ == '__main__':
         plt.plot(df_plot["date"], df_plot["origin"], label=properties.code_origin)
         plt.plot(df_plot["date"], df_plot["target"], label=properties.code_target)
         plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=0, fontsize=18)
-        plt.xticks(rotation=90)
+        plt.tick_params(bottom=False, labelbottom=False)
+        # plt.xticks(rotation=90)
         image_filename = properties.code_origin + "_" + properties.code_target + "_0.jpg"
         fig.savefig(properties.output_directory + "/" + image_filename)
         plt.close()
